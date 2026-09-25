@@ -12,9 +12,7 @@
     "node": "24"
   },
   "scripts": {
-    "dev": "bun dev",
     "build": "bun run --filter '*' build",
-    "start": "bun start",
     "lint": "oxlint apps packages scripts --no-error-on-unmatched-pattern",
     "lint:fix": "oxlint apps packages scripts --fix --no-error-on-unmatched-pattern",
     "format": "oxfmt --write .",
