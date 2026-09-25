@@ -1,0 +1,88 @@
+name: Continuous Integration - CI
+# ============================================================================
+# Continuous Integration - CI
+#
+# Runs the quality checks, unit tests, and build steps for the project.
+#
+# The workflow runs:
+# - On pull requests targeting main and develop.
+# - On manual execution.
+# ============================================================================
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+  # Allows you to manually trigger the workflow
+  workflow_dispatch:
+
+env:
+  BUN_VERSION: ${{ vars.BUN_VERSION }}
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: ${{ matrix.name }}
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        include:
+          - name: Oxfmt
+            script: format:check
+
+          - name: Oxlint
+            script: lint
+
+          - name: TypeScript
+            script: typecheck
+
+          - name: Unit Tests
+            script: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up project
+        uses: ./.github/actions/setup
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Run ${{ matrix.name }}
+        uses: ./.github/actions/bun-run
+        with:
+          script: ${{ matrix.script }}
+
+  build:
+    name: Application Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [quality]
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up project
+        uses: ./.github/actions/setup
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Build application
+        uses: ./.github/actions/bun-run
+        with:
+          script: build

@@ -1,0 +1,133 @@
+version: 2
+
+updates:
+  # ============================================================================
+  # JavaScript / Bun
+  #
+  # Dependabot uses the native "bun" ecosystem to keep package.json and bun.lock
+  # in sync. CI runs `bun install --frozen-lockfile`, so both files must agree.
+  # All dependency updates target the "develop" branch following the project's
+  # Git Flow (develop -> main).
+  #
+  # Related libraries are grouped together to reduce Pull Request noise while
+  # keeping updates easy to review and validate.
+  #
+  # Major version updates are intentionally NOT grouped, allowing each breaking
+  # change to be reviewed individually.
+  # ============================================================================
+
+  - package-ecosystem: "bun"
+    directory: "/"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+
+    target-branch: "develop"
+
+    # Limit the number of simultaneously opened Dependabot PRs.
+    open-pull-requests-limit: 5
+
+    # Keep commit messages compatible with Conventional Commits.
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+    # Squash Merge is the repository merge strategy, therefore automatic rebases
+    # are unnecessary and only create additional commits.
+    rebase-strategy: "disabled"
+
+    # Automatically assign the repository owner.
+    assignees:
+      - "WillianSantosC"
+
+    labels:
+      - "dependencies"
+      - "dependabot"
+      - "chore"
+
+    groups:
+      # ------------------------------------------------------------------------
+      # Testing ecosystem
+      #
+      # Keep testing libraries together to simplify compatibility validation.
+      # ------------------------------------------------------------------------
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # ------------------------------------------------------------------------
+      # TypeScript
+      #
+      # Keep TypeScript and type definitions together to reduce maintenance
+      # effort.
+      # ------------------------------------------------------------------------
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # ------------------------------------------------------------------------
+      # Biome
+      #
+      # Keep Biome and its dependencies together to reduce maintenance effort.
+      # ------------------------------------------------------------------------
+      biome:
+        patterns:
+          - "@biomejs/*"
+          - "biome"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ============================================================================
+  # GitHub Actions
+  #
+  # Keep GitHub Actions updated with security patches and improvements.
+  # All workflow updates are grouped into a single Pull Request.
+  # ============================================================================
+  - package-ecosystem: "github-actions"
+    directory: "/"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+
+    target-branch: "develop"
+
+    open-pull-requests-limit: 3
+
+    commit-message:
+      prefix: "chore(actions)"
+
+    rebase-strategy: "disabled"
+
+    assignees:
+      - "WillianSantosC"
+
+    labels:
+      - "dependencies"
+      - "dependabot"
+      - "github-actions"
+      - "chore"
+
+    groups:
+      # ------------------------------------------------------------------------
+      # GitHub Actions
+      #
+      # Keep all workflow actions updated together to reduce maintenance effort.
+      # ------------------------------------------------------------------------
+      github-actions:
+        patterns:
+          - "*"

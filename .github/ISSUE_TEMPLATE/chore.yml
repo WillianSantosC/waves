@@ -1,0 +1,71 @@
+name: 🔧 Chore
+description: Maintenance task, dependency update, refactor, or technical debt
+title: "chore: "
+labels: ["chore"]
+body:
+  - type: markdown
+    attributes:
+      value: "For maintenance tasks that don't add features or fix user-facing bugs."
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Task Description
+      placeholder: |
+        "Update Bun from 1.1.x to 1.2.x across all config files:
+        package.json engines field, CI workflow, CONTRIBUTING.md setup."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Chore Type
+      options:
+        - "📦 Dependency update"
+        - "♻️ Refactor / code cleanup"
+        - "🛠️ Tooling / configuration change"
+        - "🏗️ Infrastructure / CI change"
+        - "🗑️ Technical debt reduction"
+        - "📚 Documentation update"
+        - "🔐 Security hardening"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      placeholder: |
+        "Bun 1.2 introduces a text lockfile (bun.lock) more readable in PR
+        diffs than the previous binary format (bun.lockb), and includes
+        stability fixes for the Bun test runner."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and Impact
+      placeholder: |
+        "Files: package.json, bun.lock, .github/workflows/*.yml, CONTRIBUTING.md
+        Risk: Low. Bun 1.2 is backward compatible with existing scripts."
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Completion Checklist
+      value: |
+        - [ ] Task 1
+        - [ ] Task 2
+        - [ ] All existing tests pass after the change
+        - [ ] CONTRIBUTING.md updated if setup instructions changed
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      placeholder: |
+        - Bun 1.3 release notes: https://bun.sh/blog/bun-v1.3
+        - Related issue: #XX

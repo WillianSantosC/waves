@@ -1,0 +1,89 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: "bug: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "Please provide as much detail as possible to help us investigate quickly."
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      placeholder: "When I click the watchlist button on a movie card, the page crashes..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. Go to '/movies/popular'
+        2. Click the watchlist toggle on any movie card
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      placeholder: "The movie should be added to my watchlist and the button should show a filled icon."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      placeholder: "Page crashes with: TypeError: Cannot read properties of undefined..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - "🔴 Critical — Application unusable / data loss"
+        - "🟠 High — Major feature broken, no workaround"
+        - "🟡 Medium — Feature impaired, workaround exists"
+        - "🟢 Low — Minor / cosmetic / edge case"
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: "https://example.com/movies/popular"
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options: [Chrome, Firefox, Safari, Edge, Other, Not browser-specific]
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device Type
+      options: [Desktop, Mobile, Tablet]
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or Console Output
+      description: Drag and drop screenshots or paste stack traces here.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before Submitting
+      options:
+        - label: I searched existing issues and confirmed this is not a duplicate
+          required: true
+        - label: I provided enough detail to reproduce the bug
+          required: true

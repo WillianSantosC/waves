@@ -1,0 +1,97 @@
+name: Code Security - CodeQL
+# ============================================================================
+# CodeQL
+#
+# Performs static security analysis on the JavaScript/TypeScript codebase.
+#
+# The workflow runs:
+# - On pushes to the main development branches.
+# - On Pull Requests targeting those branches.
+# - Weekly to detect newly introduced CodeQL queries.
+# - Manually when needed.
+#
+# JavaScript/TypeScript projects do not require an explicit build step for
+# CodeQL analysis, so this workflow intentionally avoids unnecessary work to
+# keep execution fast.
+# ============================================================================
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+  schedule:
+    # Weekly full scan every Sunday at 02:00 UTC.
+    - cron: "0 2 * * 0"
+
+  # Allow manual triggering of the workflow.
+  workflow_dispatch:
+
+# Cancel previous executions for the same branch when new commits are pushed.
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: CodeQL Security Analysis
+
+    runs-on: ubuntu-latest
+
+    # Prevent long-running jobs from consuming unnecessary GitHub Actions time.
+    timeout-minutes: 30
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - javascript-typescript
+
+    steps:
+      # ----------------------------------------------------------------------
+      # Checkout repository
+      # ----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # ----------------------------------------------------------------------
+      # Initialize CodeQL
+      #
+      # JavaScript/TypeScript projects do not require a build step for CodeQL.
+      #
+      # build-mode: none makes this decision explicit and avoids unnecessary
+      # build attempts, keeping the workflow fast and deterministic.
+      #
+      # Query Suite:
+      # - security-extended focuses exclusively on security analysis.
+      # - Code quality, maintainability and code smells are handled separately
+      #   by SonarCloud.
+      # ----------------------------------------------------------------------
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+
+          # Do not attempt to build the project.
+          build-mode: none
+
+          # Security-focused query suite.
+          queries: security-extended
+
+      # ----------------------------------------------------------------------
+      # Perform analysis
+      # ----------------------------------------------------------------------
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"

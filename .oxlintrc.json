@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "off"
+  },
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "jsPlugins": ["oxlint-plugin-complexity"],
+  "ignorePatterns": [
+    "out/**",
+    "build/**",
+    "coverage/**",
+    "dist/**",
+    "public/**",
+    ".cursor/**",
+    ".agents/**"
+  ],
+  "rules": {
+    "complexity": ["error", 15],
+    "max-depth": ["error", 3],
+    "max-params": ["error", 4],
+    "max-statements": ["error", 30],
+    "complexity/complexity": [
+      "error",
+      {
+        "cyclomatic": 15,
+        "cognitive": 10,
+        "minLines": 0,
+        "enableExtraction": false
+      }
+    ],
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "complexity": "off",
+        "max-depth": "off",
+        "max-params": "off",
+        "max-statements": "off",
+        "complexity/complexity": "off"
+      }
+    }
+  ]
+}

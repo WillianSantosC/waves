@@ -1,0 +1,63 @@
+name: 📚 Documentation
+description: Report missing, outdated, or unclear documentation
+title: "docs: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: "Use this template to report documentation problems or request new docs."
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Documentation Issue Type
+      options:
+        - "📝 Missing documentation (topic not covered)"
+        - "🔄 Outdated documentation (no longer accurate)"
+        - "❓ Unclear documentation (exists but confusing)"
+        - "🔗 Broken link or missing reference"
+        - "✏️ Typo or grammar error"
+        - "📖 New documentation requested"
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Documentation Location
+      description: Which file, section, or URL has the problem?
+      placeholder: "CONTRIBUTING.md → Development Setup → Step 3"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: What is wrong or missing? Quote the problematic text if applicable.
+      placeholder: |
+        "CONTRIBUTING.md says to run `pnpm install` but this project uses Bun.
+        The correct command is `bun install`."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed Improvement
+      description: What should it say instead?
+      placeholder: |
+        "Replace `pnpm install` with `bun install` and update all subsequent
+        commands to use `bun run` instead of `pnpm run`."
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Screenshots, links to external docs, or related issues.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before Submitting
+      options:
+        - label: I searched existing issues and confirmed this has not been reported
+          required: true
