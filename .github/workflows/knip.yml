@@ -1,0 +1,56 @@
+name: Dead Code Analysis - Knip
+
+# ============================================================================
+# Knip
+#
+# Performs scheduled maintenance analysis to identify:
+# - Unused files
+# - Unused exports
+# - Unused dependencies
+# - Missing dependencies
+#
+# This workflow is intentionally informational.
+# It should never block Pull Requests or merges.
+#
+# Findings should be reviewed periodically and addressed through dedicated
+# maintenance PRs.
+# ============================================================================
+
+on:
+  schedule:
+    # Every Monday at 12:00 UTC (09:00 America/Sao_Paulo)
+    - cron: "0 12 * * 1"
+
+  # Allow manual execution.
+  workflow_dispatch:
+
+# Cancel previous executions for the same branch.
+concurrency:
+  group: knip-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  knip:
+    name: Dead Code Analysis
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up project
+        uses: ./.github/actions/setup
+        with:
+          bun-version: ${{ vars.BUN_VERSION }}
+
+      - name: Run Knip
+        continue-on-error: true
+        uses: ./.github/actions/bun-run
+        with:
+          script: knip --reporter compact

@@ -1,0 +1,11 @@
+{
+  "name": "@waves/review",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "echo \"@waves/review: nothing to build yet\""
+  }
+}

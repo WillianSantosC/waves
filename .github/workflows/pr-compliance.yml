@@ -1,0 +1,64 @@
+name: Compliance Checks - PR
+# ============================================================================
+# Compliance Checks - PR
+#
+# Validates the compliance of the pull request against the PR template.
+#
+# The workflow runs:
+# - On pull requests.
+# - On manual execution.
+# ============================================================================
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+      - ready_for_review
+  # Allows you to manually trigger the workflow
+  workflow_dispatch:
+
+concurrency:
+  group: pr-compliance-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUN_VERSION: ${{ vars.BUN_VERSION }}
+
+jobs:
+  validate:
+    name: Pull Request Compliance
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.user.login != 'dependabot[bot]'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up project
+        uses: ./.github/actions/setup
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Validate PR compliance
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          MODE=review
+          if [ "${{ github.event.pull_request.draft }}" = "true" ]; then
+            MODE=template
+          fi
+
+          echo "Validation mode: $MODE"
+
+          bun run validate:pr -- --mode "$MODE"

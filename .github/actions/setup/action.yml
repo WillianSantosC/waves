@@ -1,0 +1,34 @@
+name: Setup Project
+description: Common project setup used by CI workflows.
+
+inputs:
+  bun-version:
+    description: Bun version to install.
+    required: true
+
+  use-cache:
+    description: Restore and save the Bun dependency cache.
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+
+  steps:
+    - name: Set up Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: ${{ inputs.bun-version }}
+
+    - name: Cache Bun dependencies
+      if: inputs.use-cache == 'true'
+      uses: actions/cache@v6
+      with:
+        path: ~/.bun/install/cache
+        key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-bun-
+
+    - name: Install dependencies
+      shell: bash
+      run: bun install --frozen-lockfile

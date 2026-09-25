@@ -1,0 +1,68 @@
+name: Deep Validation
+# ============================================================================
+# Deep Validation
+#
+# Reserved for the expensive validation tier that must not gate every pull
+# request: full system/CLI E2E coverage, property-based tests, mutation
+# testing, TUI validation, and provider/integration smoke tests.
+#
+# As of this workflow's creation (25/09/2026), none of that test coverage exists yet
+# (see TESTING.md, "Foundation tooling status"). The jobs below are wired
+# to run as soon as the corresponding scripts exist, so this workflow is not
+# a placeholder that silently does nothing forever — it fails loudly if a
+# script it expects is missing once one is declared.
+#
+# Runs on a nightly schedule and manual dispatch only. Never required by the
+# fast PR gate in ci.yml.
+# ============================================================================
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+env:
+  BUN_VERSION: ${{ vars.BUN_VERSION }}
+
+jobs:
+  mutation:
+    name: Mutation Testing (Stryker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up project
+        uses: ./.github/actions/setup
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Run Stryker
+        shell: bash
+        run: bunx stryker run
+
+  system-e2e:
+    name: Full System / CLI E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up project
+        uses: ./.github/actions/setup
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Run full system/CLI E2E suite
+        shell: bash
+        run: |
+          if ! jq -e '.scripts["test:e2e"]' package.json > /dev/null; then
+            echo "No test:e2e script defined yet — nothing to run for this milestone."
+            exit 0
+          fi
+          bun run test:e2e

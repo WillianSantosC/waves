@@ -1,0 +1,88 @@
+name: ⚙️ GitHub Configuration Change
+description: Propose a change to GitHub repository settings, rulesets, environments, secrets, or variables
+title: "config: "
+labels: ["configuration", "github-settings"]
+body:
+  - type: markdown
+    attributes:
+      value: "Use this template for any change made via the GitHub web interface, not via code."
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Configuration Area
+      options:
+        - "🌿 Branch Ruleset"
+        - "🔐 Secrets"
+        - "📋 Variables"
+        - "🌍 Environment"
+        - "⚡ Actions Permissions"
+        - "🔍 Security Scanning"
+        - "🔒 Secret Scanning / Push Protection"
+        - "🤖 Dependabot"
+        - "🏷️ Labels"
+        - "🛡️ Security Settings"
+        - "📋 General Settings"
+        - "Other"
+    validations:
+      required: true
+
+  - type: input
+    id: navigation
+    attributes:
+      label: GitHub UI Navigation Path
+      placeholder: "Settings → Rules → Rulesets → main-protection → Required approvals"
+    validations:
+      required: true
+
+  - type: input
+    id: current
+    attributes:
+      label: Current Value
+      placeholder: "Required approvals: 1"
+
+  - type: input
+    id: proposed
+    attributes:
+      label: Proposed Value
+      placeholder: "Required approvals: 2"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      placeholder: |
+        "The team has grown from 1 to 3 developers. A single approval is no
+        longer sufficient for changes to main."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact Assessment
+      placeholder: |
+        "All open PRs targeting main will require one additional approval.
+        Risk: Low."
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback Plan
+      placeholder: |
+        "Navigate to Settings → Rules → Rulesets → main-protection and
+        reduce Required approvals back to 1."
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification Steps
+      placeholder: |
+        "Open a test PR with one approval and confirm the merge button
+        remains blocked until a second approval is given."

@@ -1,0 +1,47 @@
+name: Validate Runtime Environment
+description: Fail early when a workflow runtime environment is missing required variables.
+
+inputs:
+  context:
+    description: Human-readable name of the runtime contract being validated.
+    required: true
+
+  required:
+    description: Comma- or newline-separated environment variable names that must be non-empty.
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Validate required runtime variables
+      shell: bash
+      env:
+        VALIDATION_CONTEXT: ${{ inputs.context }}
+        REQUIRED_VARIABLES: ${{ inputs.required }}
+      run: |
+        missing=()
+
+        while IFS= read -r variable; do
+          variable="${variable//[[:space:]]/}"
+
+          if [[ -z "$variable" ]]; then
+            continue
+          fi
+
+          if [[ ! "$variable" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+            echo "::error::Invalid runtime variable name in ${VALIDATION_CONTEXT}."
+            exit 1
+          fi
+
+          if [[ -z "${!variable:-}" ]]; then
+            missing+=("$variable")
+          fi
+        done < <(tr ',' '\n' <<< "$REQUIRED_VARIABLES")
+
+        if (( ${#missing[@]} > 0 )); then
+          echo "::error::Missing required runtime variables for ${VALIDATION_CONTEXT}: ${missing[*]}"
+          exit 1
+        fi
+
+        echo "Runtime environment validated for ${VALIDATION_CONTEXT}."

@@ -1,0 +1,75 @@
+name: ✨ Feature Request
+description: Propose a new feature or improvement
+title: "feat: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "Describe the problem you want to solve, not just the solution."
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem are you trying to solve? From the user's perspective.
+      placeholder: |
+        "As a user with a large watchlist, I cannot quickly find movies I've rated
+        highly. I have to scroll through the entire list to find them."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      placeholder: |
+        "Add a filter bar above the watchlist with a rating range slider.
+        Selecting '8+' filters to show only movies rated 8 or higher."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      placeholder: |
+        "I considered a sort-by-rating option instead, but a filter is more
+        useful when I only want to see a specific rating range."
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - "🔴 High — Significantly improves the core use case"
+        - "🟡 Medium — Nice to have, improves the experience"
+        - "🟢 Low — Minor enhancement or polish"
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: What would "done" look like?
+      placeholder: |
+        - [ ] Filter bar appears above the watchlist
+        - [ ] Rating range slider with 1–10 range
+        - [ ] Active filter is reflected in the URL
+        - [ ] Works on mobile viewport
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Mockups, screenshots, references to similar implementations.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before Submitting
+      options:
+        - label: I searched existing issues and confirmed this has not been requested
+          required: true
+        - label: I described the problem, not just the solution
+          required: true

@@ -1,0 +1,15 @@
+name: Run Bun Script
+description: Execute a Bun script.
+
+inputs:
+  script:
+    description: Script defined in package.json.
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Run script
+      shell: bash
+      run: bun run ${{ inputs.script }}

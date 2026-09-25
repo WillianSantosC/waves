@@ -1,0 +1,15 @@
+{
+  "name": "@waves/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "waves": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "echo \"@waves/cli: nothing to build yet\""
+  },
+  "dependencies": {
+    "commander": "^15.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+# CODEOWNERS
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global catch-all
+*                          @WillianSantosC
+
+# GitHub configuration changes
+/.github/                  @WillianSantosC
+
+# Dependency management
+/package.json              @WillianSantosC
+/bun.lock                  @WillianSantosC

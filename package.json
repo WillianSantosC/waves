@@ -1,0 +1,51 @@
+{
+  "name": "waves",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": "24"
+  },
+  "scripts": {
+    "dev": "bun dev",
+    "build": "bun run --filter '*' build",
+    "start": "bun start",
+    "lint": "oxlint apps packages scripts --no-error-on-unmatched-pattern",
+    "lint:fix": "oxlint apps packages scripts --fix --no-error-on-unmatched-pattern",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "typecheck": "tsc --noEmit",
+    "commit": "commitlint",
+    "knip": "knip",
+    "test": "vitest run",
+    "check": "bun run format:check && bun run lint && bun run typecheck && bun run test && bun run build",
+    "github:labels": "bash scripts/github/sync-labels.sh",
+    "github:labels:delete": "bash scripts/github/delete-labels.sh",
+    "github:labels:reset": "bash scripts/github/delete-labels.sh && bash scripts/github/sync-labels.sh",
+    "validate:pr": "bun scripts/validate-pr/index.ts",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/types": "^21.2.0",
+    "@stryker-mutator/core": "^10.0.0",
+    "@stryker-mutator/vitest-runner": "^10.0.0",
+    "@types/bun": "latest",
+    "fast-check": "^4.10.2",
+    "husky": "^9.1.7",
+    "knip": "^6.37.0",
+    "lint-staged": "^17.5.1",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
+    "oxlint-plugin-complexity": "^3.0.0",
+    "vitest": "^5.0.1"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  }
+}
