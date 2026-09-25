@@ -58,6 +58,7 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
+          - "fast-check"
         update-types:
           - "minor"
           - "patch"
@@ -77,14 +78,54 @@ updates:
           - "patch"
 
       # ------------------------------------------------------------------------
-      # Biome
+      # Linting & formatting (Oxlint / Oxfmt)
       #
-      # Keep Biome and its dependencies together to reduce maintenance effort.
+      # Keep Oxlint and Oxfmt together to reduce maintenance effort.
       # ------------------------------------------------------------------------
-      biome:
+      linting:
         patterns:
-          - "@biomejs/*"
-          - "biome"
+          - "oxlint"
+          - "oxlint-plugin-complexity"
+          - "oxfmt"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # ------------------------------------------------------------------------
+      # Mutation testing (Stryker)
+      #
+      # Keep Stryker packages together to reduce maintenance effort.
+      # ------------------------------------------------------------------------
+      mutation-testing:
+        patterns:
+          - "@stryker-mutator/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # ------------------------------------------------------------------------
+      # Commitlint
+      #
+      # Keep commitlint and its config/types together to reduce maintenance
+      # effort.
+      # ------------------------------------------------------------------------
+      commitlint:
+        patterns:
+          - "@commitlint/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # ------------------------------------------------------------------------
+      # Git hooks
+      #
+      # Keep husky and lint-staged together since they're used in tandem for
+      # pre-commit checks.
+      # ------------------------------------------------------------------------
+      git-hooks:
+        patterns:
+          - "husky"
+          - "lint-staged"
         update-types:
           - "minor"
           - "patch"

@@ -4,5 +4,9 @@ export default defineConfig({
   test: {
     include: ["{apps,packages,scripts}/**/*.test.ts"],
     exclude: ["**/node_modules/**", "**/dist/**"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov"],
+    },
   },
 });
