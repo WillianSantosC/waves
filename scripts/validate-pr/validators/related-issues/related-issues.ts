@@ -14,7 +14,7 @@ import type {
 } from "../../core/types";
 
 const EXPECTED_FORMAT =
-  "Closes #123\nCloses PER-10\nFixes ABC-123\nResolves #456\nRelates to ENG-42\n\nor\n\nN/A";
+  "Closes #123\nCloses PER-10\nCloses [WV-1]\nFixes ABC-123\nResolves #456\nRelates to ENG-42\n\nor\n\nN/A";
 
 function createError(message: string, expected: string = EXPECTED_FORMAT): ValidationResult {
   return {

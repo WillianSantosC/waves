@@ -92,7 +92,7 @@ export function countUncheckedCheckboxes(body: string): number {
 }
 
 export const ISSUE_REFERENCE_PATTERN =
-  /^(?:[-*+]\s*)?(Closes|Fixes|Resolves|Relates to)\s+(#\d+|[A-Z][A-Z0-9]*-\d+)$/i;
+  /^(?:[-*+]\s*)?(Closes|Fixes|Resolves|Relates to)\s+(#\d+|\[[A-Z][A-Z0-9]*-\d+\]|[A-Z][A-Z0-9]*-\d+)$/i;
 
 export const NUMBERED_STEP_PATTERN = /^\d+\.\s+\S/;
 

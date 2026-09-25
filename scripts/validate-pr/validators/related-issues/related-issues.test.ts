@@ -40,6 +40,14 @@ describe("relatedIssuesValidator", () => {
     expect(relatedIssuesValidator.validate(parsed, PR_TEMPLATE)).toEqual([]);
   });
 
+  it("passes for Jira bracketed issue references", () => {
+    const parsed = parsePrBody(
+      readValidatorFixture(import.meta.dirname, "valid-related-issues-jira-brackets.md"),
+    );
+
+    expect(relatedIssuesValidator.validate(parsed, PR_TEMPLATE)).toEqual([]);
+  });
+
   it("passes when N/A is used", () => {
     const parsed = parsePrBody(readSharedFixture("valid-draft.md"));
 
