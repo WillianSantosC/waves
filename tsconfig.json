@@ -28,5 +28,11 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
+  // apps/*/src and packages/*/src are typechecked individually via each
+  // package's own `tsc --noEmit` (see each package's `typecheck` script),
+  // since only their local tsconfig.json has the correct `@/*` alias target.
+  // Each package's tsconfig.json fully overrides `include` (not merged), so
+  // this only governs the root-level compile itself.
+  "include": ["scripts", "tests", "*.ts"],
   "exclude": ["node_modules"]
 }

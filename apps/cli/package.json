@@ -7,7 +7,8 @@
     "waves": "./src/index.ts"
   },
   "scripts": {
-    "build": "echo \"@waves/cli: nothing to build yet\""
+    "build": "echo \"@waves/cli: nothing to build yet\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "commander": "^15.0.0"

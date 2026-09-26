@@ -79,6 +79,10 @@
       "name": "@waves/workflow",
       "version": "0.0.0",
     },
+    "packages/workspaces": {
+      "name": "@waves/workspaces",
+      "version": "0.0.0",
+    },
   },
   "packages": {
     "@babel/code-frame": ["@babel/code-frame@8.0.6", "", { "dependencies": { "@babel/helper-validator-identifier": "^8.0.6", "js-tokens": "^10.0.0" } }, "sha512-uMHhvmDmwFiLuiozaoRYTZHqMFuu3fem/X9JY78lohAuLoh8LSGGC8JqUzo2cVuBsBxkjMZNk56CE7ock8Xxkw=="],
@@ -538,6 +542,8 @@
     "@waves/state": ["@waves/state@workspace:packages/state"],
 
     "@waves/workflow": ["@waves/workflow@workspace:packages/workflow"],
+
+    "@waves/workspaces": ["@waves/workspaces@workspace:packages/workspaces"],
 
     "ajv": ["ajv@8.20.0", "", { "dependencies": { "fast-deep-equal": "^3.1.3", "fast-uri": "^3.0.1", "json-schema-traverse": "^1.0.0", "require-from-string": "^2.0.2" } }, "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA=="],
 

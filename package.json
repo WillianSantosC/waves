@@ -17,7 +17,7 @@
     "lint:fix": "oxlint apps packages scripts --fix --no-error-on-unmatched-pattern",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && bun run --filter '*' typecheck",
     "commit": "commitlint",
     "knip": "knip",
     "test": "vitest run",
