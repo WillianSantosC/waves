@@ -1,4 +1,4 @@
-import { execFile } from "node:child_process";
+import { execFile, type ExecException } from "node:child_process";
 
 export interface CommandResult {
   exitCode: number;
@@ -25,9 +25,22 @@ export function runCommand(
   return new Promise((resolve) => {
     execFile(command, args, { cwd: options.cwd }, (error, stdout, stderr) => {
       const spawnError = error && typeof error.code === "string" ? error.code : undefined;
-      const exitCode = error && typeof error.code === "number" ? error.code : error ? 1 : 0;
+      const exitCode = resolveExitCode(error);
 
-      resolve({ exitCode, stdout: stdout.trim(), stderr: stderr.trim(), spawnError });
+      resolve({
+        exitCode,
+        stdout: stdout.trim(),
+        stderr: stderr.trim(),
+        spawnError,
+      });
     });
   });
+}
+
+function resolveExitCode(error: ExecException | null): number {
+  if (error === null) {
+    return 0;
+  }
+
+  return typeof error.code === "number" ? error.code : 1;
 }

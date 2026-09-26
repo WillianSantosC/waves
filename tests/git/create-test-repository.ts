@@ -30,9 +30,12 @@ export async function createTestRepository(
 
 function runGit(cwd: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
-    execFile("git", args, { cwd }, (error) => {
+    // Explicitly pin `env` to the current process's environment so `git` is
+    // resolved through a known, inherited PATH (the trusted CI/developer
+    // environment running this test suite) rather than an implicit lookup.
+    execFile("git", args, { cwd, env: process.env }, (error) => {
       if (error) {
-        reject(error);
+        reject(error instanceof Error ? error : new Error(String(error)));
         return;
       }
       resolve();
