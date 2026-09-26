@@ -41,7 +41,7 @@ jobs:
 
       - name: Run Stryker
         shell: bash
-        run: bunx stryker run
+        run: bun run test:mutation
 
   system-e2e:
     name: Full System / CLI E2E

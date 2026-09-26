@@ -1,0 +1,107 @@
+name: Code Quality - SonarCloud
+
+# ============================================================================
+# SonarCloud
+#
+# Performs static code quality analysis on the project.
+#
+# Responsibilities:
+# - Code Smells
+# - Bugs
+# - Maintainability
+# - Code Duplication
+# - Test Coverage
+#
+# This workflow intentionally runs the test suite with coverage before the
+# analysis so SonarCloud always evaluates coverage generated from the exact
+# commit being analyzed.
+# ============================================================================
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, synchronize, reopened]
+
+  # Allow manual execution when needed.
+  workflow_dispatch:
+
+# Cancel previous executions for the same branch when new commits are pushed.
+concurrency:
+  group: sonarcloud-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Code Analysis
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.user.login != 'dependabot[bot]'
+
+    runs-on: ubuntu-latest
+
+    # Prevent jobs from running indefinitely.
+    timeout-minutes: 30
+
+    permissions:
+      # Required to clone the repository.
+      contents: read
+
+      # Required for Pull Request decoration.
+      pull-requests: read
+
+    steps:
+      # ----------------------------------------------------------------------
+      # Checkout repository
+      #
+      # SonarCloud requires the full Git history to correctly identify:
+      # - New Code
+      # - Blame information
+      # - Pull Request changes
+      # ----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # ----------------------------------------------------------------------
+      # Project setup
+      # ----------------------------------------------------------------------
+      - name: Set up project
+        uses: ./.github/actions/setup
+        with:
+          bun-version: ${{ vars.BUN_VERSION }}
+
+      # ----------------------------------------------------------------------
+      # Generate test coverage
+      #
+      # The generated LCOV report is automatically consumed by SonarCloud using
+      # the configuration defined in sonar-project.properties.
+      # ----------------------------------------------------------------------
+      - name: Run tests with coverage
+        run: bun run test:coverage
+
+      - name: Verify LCOV report
+        run: test -s coverage/lcov.info
+
+      # ----------------------------------------------------------------------
+      # SonarCloud Analysis
+      #
+      # The scanner automatically loads the configuration from the
+      # sonar-project.properties file located at the repository root.
+      # ----------------------------------------------------------------------
+      - name: SonarCloud Scan and Quality Gate
+        uses: SonarSource/sonarqube-scan-action@v8
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300
+        env:
+          # Automatically provided by GitHub Actions.
+          # Used for Pull Request decoration and Quality Gate reporting.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Authentication token generated in SonarCloud.
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -2,6 +2,9 @@
 
 > A configurable, cost-aware software delivery orchestrator for AI coding agents, built around DAG workflows, quality gates, human oversight, and evidence-driven execution.
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=WillianSantosC_waves&metric=coverage)](https://sonarcloud.io/summary/new_code?id=WillianSantosC_waves)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=WillianSantosC_waves&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=WillianSantosC_waves)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=WillianSantosC_waves&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=WillianSantosC_waves)
 [![CI](https://github.com/WillianSantosC/waves/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/WillianSantosC/waves/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
 

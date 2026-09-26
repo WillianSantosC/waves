@@ -3,6 +3,8 @@
   "packageManager": "npm",
   "testRunner": "vitest",
   "reporters": ["clear-text", "progress", "html"],
-  "mutate": [],
-  "ignoreStatic": true
+  "mutate": ["apps/*/src/**/*.ts", "packages/*/src/**/*.ts", "!**/*.test.ts", "!**/*.d.ts"],
+  "ignoreStatic": true,
+  "inPlace": true,
+  "concurrency": 1
 }

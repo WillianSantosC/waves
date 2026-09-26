@@ -12,6 +12,7 @@ const PACKAGES = [
   "evidence",
   "review",
   "skills",
+  "workspaces",
 ] as const;
 
 describe("workspace package resolution", () => {
