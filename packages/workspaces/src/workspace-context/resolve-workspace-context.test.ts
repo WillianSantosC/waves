@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -59,5 +59,27 @@ describe("resolveWorkspaceContext", () => {
     } finally {
       await rm(nonRepoDir, { recursive: true, force: true });
     }
+  });
+
+  it("throws WORKSPACE_INVOCATION_DIRECTORY_NOT_FOUND when the invocation directory does not exist, instead of WORKSPACE_NOT_A_GIT_REPOSITORY", async () => {
+    const missingDir = path.join(tmpdir(), "waves-missing-dir-that-does-not-exist");
+
+    await expect(resolveWorkspaceContext(missingDir)).rejects.toMatchObject({
+      name: "WorkspaceResolutionError",
+      category: "OPERATIONAL",
+      code: "WORKSPACE_INVOCATION_DIRECTORY_NOT_FOUND",
+      retryable: false,
+    });
+  });
+
+  it("throws WORKSPACE_INVOCATION_DIRECTORY_NOT_FOUND when the invocation path is a file, not a directory", async () => {
+    repository = await createTestRepository();
+    const filePath = path.join(repository.root, "a-file.txt");
+    await writeFile(filePath, "not a directory");
+
+    await expect(resolveWorkspaceContext(filePath)).rejects.toMatchObject({
+      name: "WorkspaceResolutionError",
+      code: "WORKSPACE_INVOCATION_DIRECTORY_NOT_FOUND",
+    });
   });
 });

@@ -7,6 +7,7 @@ describe("runCommand", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toBe("hello");
+    expect(result.spawnError).toBeUndefined();
   });
 
   it("captures a non-zero exit code without throwing", async () => {
@@ -19,5 +20,14 @@ describe("runCommand", () => {
     const result = await runCommand("echo", ["$(echo injected)"], { cwd: process.cwd() });
 
     expect(result.stdout).toBe("$(echo injected)");
+  });
+
+  it("reports spawnError instead of a fabricated exit code when the process never starts (cwd does not exist)", async () => {
+    const missingCwd = "/waves-cwd-that-does-not-exist";
+
+    const result = await runCommand("echo", ["hello"], { cwd: missingCwd });
+
+    expect(result.spawnError).toBeDefined();
+    expect(typeof result.spawnError).toBe("string");
   });
 });

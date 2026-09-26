@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { createTestRepository, type TestRepository } from "@tests/git/create-test-repository.ts";
-import { resolveGitRepositoryRoot } from "./git-repository-root.ts";
+import { GitExecutableUnavailableError, resolveGitRepositoryRoot } from "./git-repository-root.ts";
 
 describe("resolveGitRepositoryRoot", () => {
   let repository: TestRepository | undefined;
@@ -49,5 +49,13 @@ describe("resolveGitRepositoryRoot", () => {
     } finally {
       await rm(nonRepoDir, { recursive: true, force: true });
     }
+  });
+
+  it("throws GitExecutableUnavailableError instead of returning undefined when the process fails to spawn (e.g. cwd does not exist)", async () => {
+    const missingDir = path.join(tmpdir(), "waves-missing-dir-that-does-not-exist");
+
+    await expect(resolveGitRepositoryRoot(missingDir)).rejects.toBeInstanceOf(
+      GitExecutableUnavailableError,
+    );
   });
 });
