@@ -394,10 +394,39 @@ A valid execution requires compatible capabilities across
 WorkspaceStrategy, Runtime, Executor, permissions, and node
 requirements.
 
-`LocalRuntime` does not imply an unisolated workspace.
+`LocalRuntime` may execute inside either the current checkout or an
+isolated worktree. `LocalRuntime` must not be treated as synonymous with
+an unisolated workspace: workspace isolation and runtime hosting are
+independent axes, and a local process runtime is free to operate on a
+`worktree` workspace.
 
-Orca is an optional worker/isolation runtime only. Waves retains DAG
-scheduling, approvals, retries, evidence, memory, and durable state.
+Any future `OrcaRuntime` adapter may use Orca only as a single-worker/
+isolation execution backend. Waves must continue to own DAG scheduling,
+waves, retries, approvals, evidence, memory, and durable workflow state;
+nested Orca orchestration must not become part of the Waves execution
+model.
+
+## 7.5 Code
+
+The stable boundary contracts are implemented in:
+
+```text
+packages/core        WorkspaceId/RuntimeId/ExecutorId, AgentExecutionRequest,
+                      AgentExecutionResult, Workspace (data shape)
+packages/workspaces   WorkspaceStrategy
+packages/runtimes     AgentRuntime
+packages/executors    AgentExecutor, ExecutorCapabilities
+```
+
+`WorkspaceStrategy`, `AgentRuntime`, and `AgentExecutor` each depend only
+on `@waves/core` and never on one another, so any one can be swapped
+without the other two changing. See
+`packages/runtimes/src/agent-runtime/agent-runtime.test.ts` for tests
+proving this independence across combinations such as
+`current + LocalRuntime + CodexExecutor` and
+`worktree + LocalRuntime + ClaudeExecutor` (using fakes in place of the
+not-yet-built real adapters). Full field-level definitions live in
+`docs/contracts/core-contracts-v0.1.md` §2 and §39-48.
 
 ---
 

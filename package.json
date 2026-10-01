@@ -31,6 +31,10 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@waves/core": "workspace:*",
+    "@waves/executors": "workspace:*",
+    "@waves/runtimes": "workspace:*",
+    "@waves/workspaces": "workspace:*",
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.3",
     "@commitlint/types": "^21.2.0",
