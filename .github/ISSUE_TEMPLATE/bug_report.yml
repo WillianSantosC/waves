@@ -11,7 +11,7 @@ body:
     id: description
     attributes:
       label: Describe the Bug
-      placeholder: "When I click the watchlist button on a movie card, the page crashes..."
+      placeholder: "When a workflow node fails and retries, the budget tracker double-counts the token usage from the failed attempt..."
     validations:
       required: true
 
@@ -20,9 +20,9 @@ body:
     attributes:
       label: Steps to Reproduce
       placeholder: |
-        1. Go to '/movies/popular'
-        2. Click the watchlist toggle on any movie card
-        3. See error
+        1. Define a workflow with a node that has a BudgetPolicy limit of 1000 tokens
+        2. Trigger a failure in that node so it retries once
+        3. Inspect the workflow evidence/state after completion
     validations:
       required: true
 
@@ -30,7 +30,7 @@ body:
     id: expected
     attributes:
       label: Expected Behavior
-      placeholder: "The movie should be added to my watchlist and the button should show a filled icon."
+      placeholder: "Only the token usage from the successful attempt should count against the node's budget."
     validations:
       required: true
 
@@ -38,7 +38,7 @@ body:
     id: actual
     attributes:
       label: Actual Behavior
-      placeholder: "Page crashes with: TypeError: Cannot read properties of undefined..."
+      placeholder: "The failed attempt's token usage is persisted and summed with the retry, causing the node to exceed its budget and abort incorrectly."
     validations:
       required: true
 
@@ -55,28 +55,28 @@ body:
       required: true
 
   - type: input
-    id: url
+    id: context
     attributes:
-      label: Page URL
-      placeholder: "https://example.com/movies/popular"
+      label: Affected Component
+      placeholder: "packages/core/budget, CLI command, provider adapter name, etc."
 
   - type: dropdown
-    id: browser
+    id: executor
     attributes:
-      label: Browser
-      options: [Chrome, Firefox, Safari, Edge, Other, Not browser-specific]
+      label: Agent Executor / Provider (if relevant)
+      options: [Claude Code, Codex, Other / N/A]
 
   - type: dropdown
-    id: device
+    id: environment
     attributes:
-      label: Device Type
-      options: [Desktop, Mobile, Tablet]
+      label: Environment
+      options: [Local CLI, CI, Not environment-specific]
 
   - type: textarea
     id: screenshots
     attributes:
-      label: Screenshots or Console Output
-      description: Drag and drop screenshots or paste stack traces here.
+      label: Logs, Evidence, or Stack Traces
+      description: Drag and drop logs/screenshots or paste stack traces, workflow state dumps, or evidence output here.
 
   - type: checkboxes
     id: checklist

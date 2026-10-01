@@ -26,7 +26,7 @@ body:
     attributes:
       label: Documentation Location
       description: Which file, section, or URL has the problem?
-      placeholder: "CONTRIBUTING.md → Development Setup → Step 3"
+      placeholder: "docs/architecture/ → Provider Adapters → Capability Registration"
 
   - type: textarea
     id: problem
@@ -34,8 +34,9 @@ body:
       label: Problem Description
       description: What is wrong or missing? Quote the problematic text if applicable.
       placeholder: |
-        "CONTRIBUTING.md says to run `pnpm install` but this project uses Bun.
-        The correct command is `bun install`."
+        "The Provider Adapters doc describes registering a provider via a
+        `registerExecutor()` call, but the current API uses `ProviderRegistry.register()`.
+        The documented example no longer compiles against the current contract."
     validations:
       required: true
 
@@ -45,8 +46,8 @@ body:
       label: Proposed Improvement
       description: What should it say instead?
       placeholder: |
-        "Replace `pnpm install` with `bun install` and update all subsequent
-        commands to use `bun run` instead of `pnpm run`."
+        "Update the example to use `ProviderRegistry.register()` and link to the
+        current ADR describing the provider registration contract."
 
   - type: textarea
     id: context
