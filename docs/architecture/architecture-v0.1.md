@@ -453,6 +453,28 @@ fingerprints and repository revision where available.
 Generated Markdown such as `.waves/generated/project-context.md` is a
 human-readable projection, not the machine source of truth.
 
+## 8.1 Code
+
+The deterministic discovery pass (no LLM) is implemented in
+`packages/context`:
+
+```text
+packages/context/src/project-discovery    discoverProject, ProjectDiscoveryResult
+packages/context/src/instruction-sources  AGENTS.md/CLAUDE.md/CONTEXT.md/.cursor/rules/README/docs/ADR
+packages/context/src/skill-locations      .waves/skills, .agents/skills, .claude/skills (paths only)
+packages/context/src/manifests            package.json, pyproject.toml, Cargo.toml, go.mod, Docker/CI
+packages/context/src/command-inference    ProjectCommands, inferred only when unambiguous, with provenance
+```
+
+`discoverProject` produces a `ProjectDiscoveryResult` rather than the full
+`ProjectContextSnapshot` from `docs/contracts/core-contracts-v0.1.md` §29:
+the snapshot's `id`/`projectId`/incrementing `version` are persistence
+concerns, assigned by whichever future component stores discovery results
+over time, not by discovery itself. See
+`packages/context/src/project-discovery/project-discovery.test.ts` for
+coverage of representative JS/TS and non-JS layouts, missing metadata,
+ambiguous command candidates, and nested instruction sources.
+
 ---
 
 # 9. Context and Memory Taxonomy
