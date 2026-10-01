@@ -13,8 +13,9 @@ body:
       label: Problem Statement
       description: What problem are you trying to solve? From the user's perspective.
       placeholder: |
-        "As a user with a large watchlist, I cannot quickly find movies I've rated
-        highly. I have to scroll through the entire list to find them."
+        "As someone orchestrating multi-node workflows, I cannot tell which node
+        consumed the most budget after a run. I have to manually grep through
+        evidence files to reconstruct per-node token usage."
     validations:
       required: true
 
@@ -23,8 +24,8 @@ body:
     attributes:
       label: Proposed Solution
       placeholder: |
-        "Add a filter bar above the watchlist with a rating range slider.
-        Selecting '8+' filters to show only movies rated 8 or higher."
+        "Add a `waves budget report <workflow-run-id>` CLI command that reads the
+        durable workflow evidence and prints a per-node token/cost breakdown."
     validations:
       required: true
 
@@ -33,8 +34,9 @@ body:
     attributes:
       label: Alternatives Considered
       placeholder: |
-        "I considered a sort-by-rating option instead, but a filter is more
-        useful when I only want to see a specific rating range."
+        "I considered exposing this only as a dashboard, but a CLI command is
+        more useful for CI pipelines and scripting, and a dashboard can
+        consume the same underlying data later."
 
   - type: dropdown
     id: priority
@@ -53,16 +55,16 @@ body:
       label: Acceptance Criteria
       description: What would "done" look like?
       placeholder: |
-        - [ ] Filter bar appears above the watchlist
-        - [ ] Rating range slider with 1–10 range
-        - [ ] Active filter is reflected in the URL
-        - [ ] Works on mobile viewport
+        - [ ] `waves budget report <workflow-run-id>` command exists and is documented
+        - [ ] Per-node token/cost breakdown is read from durable evidence, not recomputed
+        - [ ] Output remains provider-neutral (no vendor-specific pricing assumptions baked in)
+        - [ ] Covered by a CLI E2E test
 
   - type: textarea
     id: context
     attributes:
       label: Additional Context
-      description: Mockups, screenshots, references to similar implementations.
+      description: Links to related ADRs, contracts, or similar implementations.
 
   - type: checkboxes
     id: checklist

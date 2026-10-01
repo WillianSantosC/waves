@@ -1,0 +1,16 @@
+export type TaskId = string;
+export type WorkflowId = string;
+export type WorkflowRunId = string;
+export type NodeId = string;
+export type NodeRunId = string;
+export type AgentProfileId = string;
+export type SkillId = string;
+export type ArtifactId = string;
+export type EvidenceId = string;
+export type ApprovalId = string;
+export type MemorySnapshotId = string;
+export type ProviderId = string;
+export type WorkspaceId = string;
+export type RuntimeId = string;
+export type ExecutorId = string;
+export type CheckpointId = string;

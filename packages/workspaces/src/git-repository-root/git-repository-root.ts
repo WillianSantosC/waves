@@ -1,5 +1,5 @@
 import path from "node:path";
-import { runCommand } from "@/command-runner/command-runner.ts";
+import { runCommand } from "../command-runner/command-runner.ts";
 
 /**
  * Thrown when the `git` executable could not be run at all (missing from

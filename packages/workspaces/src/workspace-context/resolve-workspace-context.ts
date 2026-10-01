@@ -3,7 +3,7 @@ import path from "node:path";
 import {
   GitExecutableUnavailableError,
   resolveGitRepositoryRoot,
-} from "@/git-repository-root/git-repository-root.ts";
+} from "../git-repository-root/git-repository-root.ts";
 import { WorkspaceResolutionError } from "./workspace-resolution-error.ts";
 import type { WorkspaceContext } from "./workspace-context.ts";
 

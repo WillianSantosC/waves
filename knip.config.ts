@@ -9,7 +9,7 @@ const config: KnipConfig = {
   workspaces: {
     ".": {
       entry: ["scripts/**/*.ts"],
-      project: ["scripts/**/*.ts", "*.ts"],
+      project: ["scripts/**/*.ts", "tests/**/*.ts", "*.ts"],
     },
     "apps/*": {
       project: "src/**/*.ts",

@@ -12,6 +12,10 @@
         "@stryker-mutator/vitest-runner": "^10.0.0",
         "@types/bun": "latest",
         "@vitest/coverage-v8": "^5.0.1",
+        "@waves/core": "workspace:*",
+        "@waves/executors": "workspace:*",
+        "@waves/runtimes": "workspace:*",
+        "@waves/workspaces": "workspace:*",
         "fast-check": "^4.10.2",
         "husky": "^9.1.7",
         "knip": "^6.37.0",
@@ -54,6 +58,9 @@
     "packages/executors": {
       "name": "@waves/executors",
       "version": "0.0.0",
+      "dependencies": {
+        "@waves/core": "workspace:*",
+      },
     },
     "packages/memory": {
       "name": "@waves/memory",
@@ -66,6 +73,9 @@
     "packages/runtimes": {
       "name": "@waves/runtimes",
       "version": "0.0.0",
+      "dependencies": {
+        "@waves/core": "workspace:*",
+      },
     },
     "packages/skills": {
       "name": "@waves/skills",
@@ -82,6 +92,9 @@
     "packages/workspaces": {
       "name": "@waves/workspaces",
       "version": "0.0.0",
+      "dependencies": {
+        "@waves/core": "workspace:*",
+      },
     },
   },
   "packages": {
