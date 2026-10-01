@@ -87,6 +87,13 @@ export class FileConfigurationResolver implements ConfigurationResolver {
     };
   }
 
+  // `validate`/`explain` are declared `async` (with no `await` inside) to
+  // satisfy the `ConfigurationResolver` interface, which every
+  // implementation — including a future registry-backed or remote one —
+  // must satisfy with the same Promise-returning signature. This
+  // implementation happens to resolve everything synchronously (pure Zod
+  // parsing / in-memory lookups), so there is nothing to await here, but
+  // callers must still treat the result as asynchronous.
   async validate(input: unknown): Promise<ConfigurationValidationResult> {
     const result = wavesConfigSchema.safeParse(input);
     if (result.success) {
@@ -101,6 +108,9 @@ export class FileConfigurationResolver implements ConfigurationResolver {
     };
   }
 
+  // Same rationale as `validate` above: async to satisfy the interface,
+  // synchronous in this implementation because it only reads already
+  // in-memory `ResolvedConfig` data.
   async explain(resolved: ResolvedConfig, path?: string): Promise<ConfigurationExplanation> {
     const entries = Object.entries(resolved.provenance)
       .filter(

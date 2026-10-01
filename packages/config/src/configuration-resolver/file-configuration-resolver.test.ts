@@ -112,4 +112,106 @@ describe("FileConfigurationResolver", () => {
       resolver.resolve({ builtinDefaults, userConfigPath: fixture.userConfigPath }),
     ).rejects.toThrow(ConfigError);
   });
+
+  it("applies profile/workflow/node overrides, including an override with no reference", async () => {
+    fixture = await writeFixtureConfigTree({
+      projectConfigYaml: "version: 1\nexecution:\n  parallelism:\n    maxConcurrentNodes: 2\n",
+    });
+
+    const resolver = new FileConfigurationResolver();
+    const resolved = await resolver.resolve({
+      builtinDefaults,
+      projectConfigPath: fixture.projectConfigPath,
+      overrides: [
+        {
+          kind: "workflow",
+          reference: "builtin:tdd-feature",
+          config: { execution: { parallelism: { maxConcurrentNodes: 6 } } },
+        },
+        {
+          kind: "node",
+          config: { execution: { timeouts: { nodeTimeoutMs: 5000 } } },
+        },
+      ],
+    });
+
+    expect(resolved.values.execution?.parallelism?.maxConcurrentNodes).toBe(6);
+    expect(resolved.provenance["execution.parallelism.maxConcurrentNodes"]).toEqual({
+      kind: "workflow",
+      reference: "builtin:tdd-feature",
+    });
+    expect(resolved.values.execution?.timeouts?.nodeTimeoutMs).toBe(5000);
+    expect(resolved.provenance["execution.timeouts.nodeTimeoutMs"]).toEqual({ kind: "node" });
+  });
+
+  it("rejects a top-level YAML document that is not a mapping", async () => {
+    fixture = await writeFixtureConfigTree({
+      projectConfigYaml: "- 1\n- 2\n",
+    });
+
+    const resolver = new FileConfigurationResolver();
+    await expect(
+      resolver.resolve({ builtinDefaults, projectConfigPath: fixture.projectConfigPath }),
+    ).rejects.toThrow(ConfigError);
+  });
+
+  it("rethrows a non-missing-file error instead of treating it as an absent config file", async () => {
+    fixture = await writeFixtureConfigTree({});
+    // Point at a directory, not a file, so `readFile` fails with EISDIR
+    // rather than ENOENT — this must not be treated as "file absent".
+    const directoryAsConfigPath = fixture.root;
+
+    const resolver = new FileConfigurationResolver();
+    await expect(
+      resolver.resolve({ builtinDefaults, projectConfigPath: directoryAsConfigPath }),
+    ).rejects.toThrow();
+  });
+
+  it("validates a well-formed and an invalid WavesConfig document", async () => {
+    const resolver = new FileConfigurationResolver();
+
+    await expect(resolver.validate({ version: 1, ui: { theme: "dark" } })).resolves.toEqual({
+      valid: true,
+    });
+
+    const result = await resolver.validate({
+      version: 1,
+      execution: { parallelism: { maxConcurrentNodes: -1 } },
+    });
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.errors.length).toBeGreaterThan(0);
+      expect(result.errors[0]?.path).toContain("execution");
+    }
+  });
+
+  it("explains resolved provenance, optionally filtered to a path prefix", async () => {
+    fixture = await writeFixtureConfigTree({
+      projectConfigYaml: "version: 1\nproject:\n  name: demo\nui:\n  theme: dark\n",
+    });
+
+    const resolver = new FileConfigurationResolver();
+    const resolved = await resolver.resolve({
+      builtinDefaults,
+      projectConfigPath: fixture.projectConfigPath,
+    });
+
+    const all = await resolver.explain(resolved);
+    expect(all.entries.map((entry) => entry.path)).toEqual(
+      expect.arrayContaining(["project.name", "ui.theme"]),
+    );
+
+    const onlyProject = await resolver.explain(resolved, "project");
+    expect(onlyProject.entries).toEqual([
+      {
+        path: "project.name",
+        value: "demo",
+        source: { kind: "project", reference: fixture.projectConfigPath },
+      },
+    ]);
+
+    const exactMatch = await resolver.explain(resolved, "project.name");
+    expect(exactMatch.entries).toHaveLength(1);
+    expect(exactMatch.entries[0]?.value).toBe("demo");
+  });
 });

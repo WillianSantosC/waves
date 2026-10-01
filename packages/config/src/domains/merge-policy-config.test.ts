@@ -52,4 +52,32 @@ describe("mergePolicyConfig", () => {
     ]);
     expect(merged.maxRunCostUsd).toBe(5);
   });
+
+  it("retains an already-set field when a later layer leaves it unset", () => {
+    const merged = mergePolicyConfig([
+      {
+        source: { kind: "builtin" },
+        policies: {
+          maxRunCostUsd: 20,
+          maxNodeTimeoutMs: 60_000,
+          requireApprovalForIrreversible: true,
+          mandatoryEvidenceGates: ["lint"],
+        },
+      },
+      {
+        // Sets nothing new for any field: every per-field merge here takes
+        // the "incoming value is undefined" branch, which must preserve
+        // the previously merged value rather than clearing it.
+        source: { kind: "project" },
+        policies: {},
+      },
+    ]);
+
+    expect(merged).toEqual({
+      maxRunCostUsd: 20,
+      maxNodeTimeoutMs: 60_000,
+      requireApprovalForIrreversible: true,
+      mandatoryEvidenceGates: ["lint"],
+    });
+  });
 });

@@ -42,12 +42,15 @@ function canonicalize(value: unknown): string {
   return JSON.stringify(sortKeysDeep(value));
 }
 
+/**
+ * Only `WavesConfig`/`ProvenanceMap` shapes are ever passed in here (never
+ * `ResolvedConfig.resolvedAt`, which is deliberately excluded from the
+ * hashed payload above), and neither contains a `Date` field, so there is
+ * no `Date`-handling branch here — it would be untestable dead code.
+ */
 function sortKeysDeep(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map(sortKeysDeep);
-  }
-  if (value instanceof Date) {
-    return value.toISOString();
   }
   if (typeof value === "object" && value !== null) {
     const sorted: Record<string, unknown> = {};

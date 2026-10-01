@@ -36,4 +36,29 @@ describe("computeConfigSnapshot", () => {
 
     expect(computeConfigSnapshot(a).hash).not.toBe(computeConfigSnapshot(b).hash);
   });
+
+  it("hashes array-valued fields consistently and is sensitive to array order", () => {
+    const a = makeResolved({
+      values: { version: 1, policies: { mandatoryEvidenceGates: ["lint", "test"] } },
+    });
+    const sameOrder = makeResolved({
+      values: { version: 1, policies: { mandatoryEvidenceGates: ["lint", "test"] } },
+    });
+    const reordered = makeResolved({
+      values: { version: 1, policies: { mandatoryEvidenceGates: ["test", "lint"] } },
+    });
+
+    expect(computeConfigSnapshot(a).hash).toBe(computeConfigSnapshot(sameOrder).hash);
+    expect(computeConfigSnapshot(a).hash).not.toBe(computeConfigSnapshot(reordered).hash);
+  });
+
+  it("copies version/values/provenance and stamps a fresh capturedAt", () => {
+    const resolved = makeResolved();
+    const snapshot = computeConfigSnapshot(resolved);
+
+    expect(snapshot.version).toBe(resolved.version);
+    expect(snapshot.values).toEqual(resolved.values);
+    expect(snapshot.provenance).toEqual(resolved.provenance);
+    expect(snapshot.capturedAt).toBeInstanceOf(Date);
+  });
 });
