@@ -43,6 +43,14 @@
       "name": "@waves/artifacts",
       "version": "0.0.0",
     },
+    "packages/config": {
+      "name": "@waves/config",
+      "version": "0.0.0",
+      "dependencies": {
+        "yaml": "^2.8.1",
+        "zod": "^4.1.12",
+      },
+    },
     "packages/context": {
       "name": "@waves/context",
       "version": "0.0.0",
@@ -535,6 +543,8 @@
     "@waves/artifacts": ["@waves/artifacts@workspace:packages/artifacts"],
 
     "@waves/cli": ["@waves/cli@workspace:apps/cli"],
+
+    "@waves/config": ["@waves/config@workspace:packages/config"],
 
     "@waves/context": ["@waves/context@workspace:packages/context"],
 

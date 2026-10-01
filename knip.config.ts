@@ -8,7 +8,7 @@ const config: KnipConfig = {
   // --------------------------------------------------------------------------
   workspaces: {
     ".": {
-      entry: ["scripts/**/*.ts"],
+      entry: ["scripts/**/*.ts", "tests/**/*.test.ts"],
       project: ["scripts/**/*.ts", "tests/**/*.ts", "*.ts"],
     },
     "apps/*": {
@@ -18,11 +18,6 @@ const config: KnipConfig = {
       project: "src/**/*.ts",
     },
   },
-
-  // fast-check and Stryker Mutator are part of the standardized testing stack
-  // (see TESTING.md) but are not imported anywhere yet, since there is no
-  // domain logic to property-test or mutate in this foundation milestone.
-  ignoreDependencies: ["fast-check"],
 
   // Ignore exports that are only used inside the same file.
   ignoreExportsUsedInFile: true,
