@@ -1,0 +1,39 @@
+import { describe, expect, it } from "vitest";
+import type { ResolvedConfig } from "../resolved-config/resolved-config.ts";
+import { computeConfigSnapshot } from "./config-snapshot.ts";
+
+function makeResolved(overrides?: Partial<ResolvedConfig>): ResolvedConfig {
+  return {
+    version: 1,
+    values: { version: 1, project: { name: "demo" }, ui: { theme: "dark" } },
+    provenance: {
+      "project.name": { kind: "builtin" },
+      "ui.theme": { kind: "user" },
+    },
+    policySnapshot: { policies: {}, source: { kind: "builtin" } },
+    resolvedAt: new Date("2026-01-01T00:00:00.000Z"),
+    ...overrides,
+  };
+}
+
+describe("computeConfigSnapshot", () => {
+  it("produces a stable hash regardless of object key insertion order", () => {
+    const a = makeResolved({
+      values: { version: 1, project: { name: "demo" }, ui: { theme: "dark" } },
+    });
+    const b = makeResolved({
+      values: { ui: { theme: "dark" }, project: { name: "demo" }, version: 1 },
+    });
+
+    expect(computeConfigSnapshot(a).hash).toBe(computeConfigSnapshot(b).hash);
+  });
+
+  it("produces a different hash when content differs", () => {
+    const a = makeResolved();
+    const b = makeResolved({
+      values: { version: 1, project: { name: "different" } },
+    });
+
+    expect(computeConfigSnapshot(a).hash).not.toBe(computeConfigSnapshot(b).hash);
+  });
+});
