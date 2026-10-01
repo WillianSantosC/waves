@@ -25,6 +25,10 @@ const IGNORED_DIRECTORIES = new Set([
  */
 export async function scanRepository(repositoryRoot: string): Promise<string[]> {
   const files = await walk(repositoryRoot, "");
+  // No comparator: the default UTF-16 code unit sort is already the right
+  // order for strings, and it's locale-independent — unlike `localeCompare`,
+  // it can't produce a different order on a different machine/CI runner,
+  // which would break determinism across environments.
   return files.sort();
 }
 

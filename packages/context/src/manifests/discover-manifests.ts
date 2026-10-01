@@ -41,6 +41,9 @@ export async function discoverManifests(
     ...optionalPath("pyprojectTomlPath", findExact(normalizedPaths, "pyproject.toml")),
     ...optionalPath("cargoTomlPath", findExact(normalizedPaths, "Cargo.toml")),
     ...optionalPath("goModPath", findExact(normalizedPaths, "go.mod")),
+    // No comparator on either `.sort()`: default UTF-16 code unit sort is
+    // correct and locale-independent for strings (see scan-repository.ts
+    // for why that matters for determinism).
     dockerfiles: normalizedPaths
       .filter((relativePath) => DOCKERFILE_PATTERN.test(relativePath))
       .sort(),

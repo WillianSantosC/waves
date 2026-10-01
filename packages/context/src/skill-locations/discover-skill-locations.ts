@@ -17,6 +17,9 @@ export async function discoverSkillLocations(repositoryRoot: string): Promise<st
     }
   }
 
+  // No comparator: default UTF-16 code unit sort is correct and
+  // locale-independent for strings (see scan-repository.ts for why that
+  // matters for determinism).
   return found.sort();
 }
 

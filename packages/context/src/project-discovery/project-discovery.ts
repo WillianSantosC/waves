@@ -22,8 +22,8 @@ export async function discoverProject(repositoryRoot: string): Promise<ProjectDi
 
   const relativeFilePaths = await scanRepository(normalizedRoot);
 
-  const [resources, skillLocations, manifests, revision] = await Promise.all([
-    discoverInstructionSources(relativeFilePaths),
+  const resources = discoverInstructionSources(relativeFilePaths);
+  const [skillLocations, manifests, revision] = await Promise.all([
     discoverSkillLocations(normalizedRoot),
     discoverManifests(normalizedRoot, relativeFilePaths),
     resolveRepositoryRevision(normalizedRoot),
@@ -39,6 +39,9 @@ export async function discoverProject(repositoryRoot: string): Promise<ProjectDi
     ...(manifests.goModPath !== undefined ? [manifests.goModPath] : []),
     ...manifests.dockerfiles,
     ...manifests.ciWorkflows,
+    // No comparator: default UTF-16 code unit sort is correct and
+    // locale-independent for strings (see scan-repository.ts for why that
+    // matters for determinism).
   ].sort();
 
   const sourceFingerprints: Record<string, string> = {};
